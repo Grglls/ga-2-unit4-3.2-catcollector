@@ -1,10 +1,6 @@
 from django.shortcuts import render
 
-# Temporary data:
-cats = [
-  {'name': 'Lolo', 'breed': 'tabby', 'description': 'furry little demon', 'age': 3},
-  {'name': 'Sachi', 'breed': 'calico', 'description': 'gentle and loving', 'age': 2},
-]
+from .models import Cat
 
 # Create your views here.
 def home(request):
@@ -16,4 +12,5 @@ def about(request):
 
 
 def cats_index(request):
+    cats = Cat.objects.all()
     return render(request, 'cats/index.html', { 'cats': cats })
