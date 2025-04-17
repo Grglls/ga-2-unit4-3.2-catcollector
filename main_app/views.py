@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView
 
 from .models import Cat
 
@@ -19,3 +20,8 @@ def cats_index(request):
 def cats_detail(request, cat_id):
     cat = Cat.objects.get(id=cat_id)
     return render(request, 'cats/detail.html', { 'cat': cat })
+
+
+class CatCreate(CreateView):
+    model = Cat
+    fields = '__all__'
