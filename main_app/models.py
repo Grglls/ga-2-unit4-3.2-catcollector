@@ -25,6 +25,7 @@ class Cat(models.Model):
     breed = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     age = models.IntegerField()
+    toys = models.ManyToManyField(Toy)
 
     # Changing this instance method does not impact the database,
     # therefore no migration is needed
