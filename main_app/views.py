@@ -1,8 +1,11 @@
+import uuid
+import os
+import boto3
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 
-from .models import Cat, Toy
+from .models import Cat, Toy, Photo
 from .forms import FeedingForm
 
 # Create your views here.
@@ -42,6 +45,27 @@ def add_feeding(request, cat_id):
         new_feeding = form.save(commit=False)
         new_feeding.cat_id = cat_id
         new_feeding.save()
+    return redirect('detail', cat_id=cat_id)
+
+
+def add_photo(request, cat_id):
+    # photo-file will be the 'name' attribute on the input field, return None if not found:
+    photo_file = request.FILES.get('photo-file', None)
+    if photo_file:
+        s3 = boto3.client('s3')
+        # Need a unique 'key' for S3, needs image file extension too:
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        # Use try/except block incase there's an error:
+        try:
+            bucket = os.environ['S3_BUCKET']
+            s3.upload_fileobj(photo_file, bucket, key)
+            # Build the full URL for the photo:
+            url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+            # Add the photo to the database:
+            Photo.objects.create(url=url, cat_id=cat_id)
+        except Exception as e:
+            print('An error occurred uploading file to S3')
+            print(e)
     return redirect('detail', cat_id=cat_id)
 
 
