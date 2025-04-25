@@ -19,6 +19,9 @@
           <li><a href="{% url 'home' %}" class="left brand-logo">&nbsp;&nbsp;Cat Collector</a></li>
         </ul>
         <ul class="right">
+          {% if user.is_authenticated %}
+            <li style="margin-right: 15px;">Hello, {{ user.username }}</li>
+          {% endif %}
           <li><a href="{% url 'about' %}">About</a></li>
           {% if user.is_authenticated %}
             <li><a href="{% url 'toys_create' %}">Add a Toy</a></li>
@@ -44,7 +47,7 @@
     {% endblock %}
   </main>
   <footer class="page-footer">
-    <div class="right">All Rights Reserved, &copy; 2021 Cat Collector &nbsp;</div>
+    <div class="right">All Rights Reserved, &copy; 2025 Cat Collector &nbsp;</div>
   </footer>
 </body>
 </html>
