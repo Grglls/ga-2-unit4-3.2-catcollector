@@ -4,6 +4,8 @@ import boto3
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import Cat, Toy, Photo
 from .forms import FeedingForm
@@ -124,3 +126,26 @@ def unassoc_toy(request, cat_id, toy_id):
     # Note that you can pass a toy's id instead of the whole toy object:
     Cat.objects.get(id=cat_id).toys.remove(toy_id)
     return redirect('detail', cat_id=cat_id)
+
+
+def signup(request):
+    error_messaage = ''
+    if request.method == 'POST':
+        # Create a UserCreationForm instance using the data from the request:
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # Save the form to the database:
+            user = form.save()
+            # Log the user in:
+            login(request, user)
+            return redirect('index')
+        else:
+            # If the form is not valid, set the error message:
+            error_messaage = 'Invalid sign up - try again'
+    # If the request method is GET, or the sign up fails, render signup.html with an empty form:
+    form = UserCreationForm()
+    context = {
+        'form': form,
+        'error_message': error_messaage
+    }
+    return render(request, 'registration/signup.html', context)
