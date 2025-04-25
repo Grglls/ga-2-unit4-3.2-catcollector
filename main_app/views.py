@@ -20,7 +20,7 @@ def about(request):
 
 
 def cats_index(request):
-    cats = Cat.objects.all()
+    cats = Cat.objects.filter(user=request.user)
     return render(request, 'cats/index.html', { 'cats': cats })
 
 
