@@ -73,11 +73,11 @@ class CatCreate(CreateView):
     model = Cat
     fields = ['name', 'breed', 'description', 'age']
 
-    # Override the method called when a valid form is submitted:
+    # Override the inherited method called when a valid form is submitted:
     def form_valid(self, form):
         # Assign the logged in user (self.request.user) to the cat (form.instance):
         form.instance.user = self.request.user
-        # Pass control back to the superclass (CreateView) method to do its job:
+        # Pass control back to the superclass CreateView's form_valid() method to do its job:
         return super().form_valid(form)
 
 
